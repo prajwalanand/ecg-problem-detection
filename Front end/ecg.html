@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<script type="text/javascript">
+usr = 'keer'
+function record()
+{
+	xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = foo1;
+	xhr.open("GET", "http://127.0.0.1:5000?type=record&user="+usr, false);
+	xhr.send();
+}
+function foo1()
+{
+	if(xhr.readyState == 4 && xhr.status == 200)
+	{
+		alert(xhr.responseText);
+	}
+}
+function test()
+{
+	xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = foo2;
+	xhr.open("GET", "http://127.0.0.1:5000?type=test&user="+usr, false);
+	xhr.send();
+}
+function foo2()
+{
+	if(xhr.readyState == 4 && xhr.status == 200)
+	{
+		alert(xhr.responseText);
+		document.getElementById("im").src="http://127.0.0.1/result0.png";
+	}
+}
+function history()
+{
+	xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = foo3;
+	xhr.open("GET", "http://127.0.0.1:5000?type=history&user="+usr, false);
+	xhr.send();
+}
+function foo3()
+{
+	if(xhr.readyState == 4 && xhr.status == 200)
+	{
+		alert("History Done");
+		hist = xhr.responseText.split(';')
+		document.getElementById("list").innerHTML = '';
+		for(i=0;i<hist.length;i++)
+		{
+			item = document.createElement("p");
+			item.innerHTML = hist[i];
+			item.onclick = hist_pred;
+			document.getElementById("list").appendChild(item);
+		}
+	}
+}
+function hist_pred(e)
+{
+	xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = foo2;
+	xhr.open("GET", "http://127.0.0.1:5000?type=test_hist&user="+e.target.innerHTML, false);
+	xhr.send();
+}
+</script>
+</head>
+<body>
+<button onclick="record()">Record</button>
+<br/>
+<button onclick="test()">Test</button>
+<br/>
+<button onclick="history()">History</button>
+<br/>
+<img id='im' src='' height="300px" width="300px"/>
+<br/>
+<div id='list'></div>
+</body>
+</html>

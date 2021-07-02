@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>REPORT</title>
+	
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script> 
+	<script type="text/javascript" >
+	details =
+	{
+		"Arrhythmia": "Arrhythmia, Dysrhythmia, or irregular heartbeat, is a group of conditions in which the heartbeat is irregular, too fast, or<br/> too slow. Other symptoms may be light-headedness, passing out, shortness of breath, or chest pain.<br/>Treatments may include medications, medical procedures such as a pacemaker, and surgery.",
+		"Ischemia": "Ischemia is a restriction in blood supply to tissues, causing a shortage of oxygen that is needed for cellular metabolism (to<br/> keep tissue alive). Ischemia is generally caused by problems with blood vessels, with resultant damage to or dysfunction<br/> of tissue.  Ischemia comprises not only insufficiency of oxygen, but also reduced availability of nutrients and inadequate removal of<br/> metabolic wastes.",
+		"Heart Attack": "A heart attack occurs when a blood clot completely blocks the flow of blood and seriously reduces blood flow to the heart<br/> muscle. This also results in patients experiencing chest pain. As a result, some of the heart muscle<br/> starts to die. The longer the blockage is left untreated, the more the heart muscle is damaged. If the blood flow is<br/> not restored quickly, the damage to the heart muscle is permanent."
+	}
+	function test()
+	{	
+		usr = localStorage["user"];
+		xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = foo2;
+		if(usr.split("_").length == 1)
+			xhr.open("GET", "http://127.0.0.1:5000?type=test&user="+usr, true);
+		else
+		{
+			xhr.open("GET", "http://127.0.0.1:5000?type=test_hist&user="+usr, true);
+			window.localStorage.setItem("user", usr.split("_")[0]);
+		}
+		xhr.send();
+	}
+	function foo2()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+			alert(xhr.responseText);
+			
+			document.getElementById("im").src="http://127.0.0.1/result0.png";
+			
+			document.getElementById("vi").src="http://127.0.0.1/result.mp4";
+			
+			
+			if(xhr.responseText == "Healthy")
+			{
+				document.getElementById("cond").innerHTML = "Condition:<br/>Healthy :)";
+				document.getElementById("disease").innerHTML = "Disorder:<br/>No disease found.";
+				document.getElementById("det").innerHTML = "Details:<br/>Your heart is healthy!";
+			}
+			else
+			{
+				document.getElementById("cond").innerHTML = "Condition:<br/>Disorder may be present.";
+				document.getElementById("disease").innerHTML = "Disorder:<br/>"+xhr.responseText;
+				document.getElementById("det").innerHTML = "Details:<br/>"+details[xhr.responseText];
+			}
+		}
+	}
+	
+	</script>
+</head>
+<body background="report7.jpg" onload="test()">
+</br>
+<a href="index.html">Logout</a>
+<br/>
+<center><h1 style="color:brown;">ECG FINAL REPORT</h1></center>
+</br>
+
+<div class="container">
+<center><video id='vi' src='' height="300px" width="300px" autoplay/></center>
+<center><img id='im' src='processing.gif' height="300px" width="300px"/></center>
+<br/>
+<div class="input-group input-group-lg">
+  <div class="input-group-addon">
+    <center><span width="900px" class="input-group-text" style="color:blue" id="cond">Condition</span></center>
+  </div>
+  <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled>
+</div>
+</br>
+<div class="input-group input-group-lg">
+  <div class="input-group-addon">
+    <center><span width="900px" class="input-group-text" style="color:blue" id="disease">Disease found</span></center>
+  </div>
+  <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled>
+</div>
+</br>
+<div class="input-group input-group-lg">
+  <div class="input-group-addon">
+    <center><span width="900px" class="input-group-text" id="det" style="color:blue">Details</span></center>
+  </div>
+  <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled>
+</div>
+</br>
+
+
+</div>
+<br/>
+<a align="center" href="main.html">Back</a>
+</body>
+</html>	

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+	<head>
+    		<meta charset="utf-8">
+    		<link rel="stylesheet" href="css/bootstrap.min.css">
+    		<script src="js/bootstrap.min.js"></script>
+	<title>ECG</title>
+	<style>
+	.column {
+    float: left;
+    width: 50%;
+    height: 25%; 
+	top:20%;
+
+}
+	</style> 
+
+	<script type="text/javascript">
+    function viewReport() {
+        window.location = "report.html";
+    };
+	/*function history() {
+        window.location = "history.html";
+    };*/
+	
+	function record()
+	{
+		usr = window.localStorage.getItem("user");
+		recgif = document.createElement("img");
+		recgif.width=300;
+		recgif.height=300;
+		recgif.src = "recording.gif";
+		document.getElementById("recording").appendChild(recgif);
+		xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = foo1;
+		xhr.open("GET", "http://127.0.0.1:5000?type=record&user="+usr, true);
+		xhr.send();
+	}
+	function foo1()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+			document.getElementById("recording").innerHTML = "";
+			alert(xhr.responseText);
+		}
+	}
+	function history()
+	{
+		usr = localStorage["user"];
+		xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = foo3;
+		xhr.open("GET", "http://127.0.0.1:5000?type=history&user="+usr, true);
+		xhr.send();
+	}
+	function foo3()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+			//alert("History Done");
+			hist = xhr.responseText.split(';')
+			document.getElementById("list").innerHTML = '';
+			he = document.createElement("h3");
+			he.innerHTML = "History";
+			he.align="center";
+			he.style="color:white";
+			document.getElementById("list").appendChild(he);
+			for(i=0;i<hist.length;i++)
+			{
+				item = document.createElement("a");
+				item.innerHTML = hist[i];
+				item.href = "report.html";
+				item.onclick = hist_pred;
+				document.getElementById("list").appendChild(item);
+				document.getElementById("list").appendChild(document.createElement("br"));
+			}
+		}
+	}
+	function hist_pred(e)
+	{
+		window.localStorage.setItem("user", e.target.innerHTML);
+	}
+</script>   	
+	</head>
+
+	<body background="hello.gif">
+	
+</br>
+<a align="right" href="index.html">Logout</a>
+</br>
+</br>
+
+  	<div class="col-sm-4">
+    	<div class="text-center">
+      	<button class="btn btn-primary" id="view" onclick="history()"> View History</button>
+	</br>
+	</br>
+	<button class="btn btn-primary" id="start" onclick="record()"> Start Recording</button>
+	</br>
+	</br>
+	<button class="btn btn-primary" id="report" onclick="viewReport()"> View Report</button>
+	
+	</br>
+	</br>
+	
+    	</div>
+		
+  	</div>
+	<div id="recording" align="center">
+	</div>
+	<br/>
+	
+	<div class="col-sm-4">
+    <div class="text-center">
+	<div id='list' style="border:5px solid white"></div>
+	</div>
+	</div>
+	
+
+
+ 	
+	</body>
+</html>

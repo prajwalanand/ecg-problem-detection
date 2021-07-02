@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<title>History</title>	
+	<script type="text/javascript">
+			
+		function foo2()
+		{
+			if(xhr.readyState == 4 && xhr.status == 200)
+			{
+				alert(xhr.responseText);
+				
+				document.getElementById("im").src="http://127.0.0.1/result0.png";
+			}
+		}
+		function history()
+		{
+			usr = localStorage["user"];
+			xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = foo3;
+			xhr.open("GET", "http://127.0.0.1:5000?type=history&user="+usr, false);
+			xhr.send();
+		}
+		function foo3()
+		{
+			if(xhr.readyState == 4 && xhr.status == 200)
+			{
+				alert("History Done");
+				hist = xhr.responseText.split(';')
+				document.getElementById("list").innerHTML = '';
+				for(i=0;i<hist.length;i++)
+				{
+					item = document.createElement("p");
+					item.innerHTML = hist[i];
+					item.onclick = hist_pred;
+					document.getElementById("list").appendChild(item);
+				}
+			}
+		}
+		function hist_pred(e)
+		{
+			xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = foo2;
+			xhr.open("GET", "http://127.0.0.1:5000?type=test_hist&user="+e.target.innerHTML, false);
+			xhr.send();
+		}
+	</script>
+    </head>
+	
+	<body onload="history()">
+	<br/>
+	<a href="index.html">Logout</a>
+	<br/>
+		<div id='list'></div>
+		</br>
+		</br>
+		<img id='im' src='' height="300px" width="300px"/>
+		<br/>
+		<a href="main.html">Back</a>
+	</body>
+</html>
